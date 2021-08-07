@@ -6,8 +6,6 @@
     <div style="margin-top: 1rem;">
       <b>Type</b> &nbsp;
       <span class="info">{{type}}</span><br/>
-      <b>Areas</b> &nbsp;
-      <span class="info">{{area}}</span><br/>
       <b>Location</b> &nbsp;
       <span v-if="location === 0" class="info">In Person</span>
       <span v-else class="info">Remote</span><br/>
@@ -20,8 +18,8 @@
 
     </div>
     <div class="detailBtn">
-      <span class="statusSpan" style="background: #FFDB99;color: #FF8626;" v-if="status === 0">Unfulfilled</span>
-      <span class="statusSpan" style="background: #CFEDB1;color: #30C530"  v-else-if="status === 1">Fulfilled</span>
+      <span class="statusSpan" style="background: #FFDB99;color: #FF8626;" v-if="status === 'unfulfilled'">Unfulfilled</span>
+      <span class="statusSpan" style="background: #CFEDB1;color: #30C530"  v-else-if="status === 'fulfilled'">Fulfilled</span>
       <span class="statusSpan" style="background: #DDDDDD;color: #777777;" v-else>Closed</span>
       <vs-button
         flat
@@ -36,6 +34,8 @@
 </template>
 
 <script>
+import parseDate from "../../utils/parseDate";
+
 export default {
   name: "my-position-tag",
   props: {
@@ -50,10 +50,12 @@ export default {
       result = result.substr(0,result.length - 2);
     }
     this.audience = result;
-    // 0 unfulfilled, 1 fulfilled, 2 closed
-    if (this.status === 0) {
+    // 0 unfulfilled, 1 fulfilled, 2
+    // TODO 改边框样式
+    // console.log(this.status)
+    if (this.position.status.toLowerCase() === 'unfulfilled') {
       this.$refs.position.style = "border: 2px solid #FF8626";
-    } else if (this.status === 1) {
+    } else if (this.position.status.toLowerCase() === 'fulfilled') {
       this.$refs.position.style = "border: 2px solid #30C530";
     } else {
       this.$refs.position.style = "border: 2px solid #777777";
@@ -61,19 +63,24 @@ export default {
   },
   data () {
     return {
+      positionId: this.position._id,
       title: this.position.title,
-      type: this.position.type,
-      audience: this.position.audience,
-      area: this.position.area,
+      type: this.position.positionType,
+      audience: this.position.target,
       location: this.position.location,
-      release_time: this.position.release_time,
-      deadline: this.position.deadline,
-      status: this.position.position_status
+      release_time: parseDate(this.position.released),
+      deadline: parseDate(this.position.deadline),
+      status: this.position.status.toLowerCase()
     }
   },
   methods: {
     goToPositionDetail(){
-      this.$router.push('myPosition/detail')
+      this.$router.push({
+        name: 'facultyPositionDetail',
+        params: {
+          positionId: this.positionId
+        }
+      })
     }
   }
 
@@ -83,7 +90,7 @@ export default {
 <style scoped>
 .myPosition {
   border-radius: 1rem;
-  height: 12rem;
+  height: 10.3rem;
   position: relative;
   padding: 1rem 3rem;
   margin-bottom: 1rem;

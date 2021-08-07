@@ -11,13 +11,6 @@
             placeholder="Lorena Yan"/>
         </div>
         <div class="myInput">
-          <span class="inputLabel">Email</span>
-          <vs-input
-            primary
-            v-model="email"
-            placeholder="professor@youremail.com"/>
-        </div>
-        <div class="myInput">
           <span class="inputLabel">Institution</span><br/>
           <el-select v-model="institution" placeholder="Select your institution">
             <el-option
@@ -37,19 +30,19 @@
         </div>
         <div class="myInput">
           <span class="inputLabel">Field</span>
-          <vs-select placeholder="Area" v-model="field" id="majorSelector">
-            <vs-option label="Architecture" value='0'>Architecture</vs-option>
-            <vs-option label="Area, Ethnic, & Multidisciplinary Studies" value='1'>Area, Ethnic, & Multidisciplinary Studies</vs-option>
-            <vs-option label="Arts: Visual & Performing" value='2'>Arts: Visual & Performing</vs-option>
-            <vs-option label="Business and Economics" value='3'>Business and Economics</vs-option>
-            <vs-option label="Communications" value='4'>Communications</vs-option>
-            <vs-option label="Sociology" value='5'>Sociology</vs-option>
-            <vs-option label="Computer Science & Mathematics" value='6'>Computer Science & Mathematics</vs-option>
-            <vs-option label="Education" value='7'>Education</vs-option>
-            <vs-option label="Engineering" value='8'>Engineering</vs-option>
-            <vs-option label="Language & Literature" value='9'>Language & Literature</vs-option>
-            <vs-option label="Philosophy, Religion & Theology" value='10'>Philosophy, Religion & Theology</vs-option>
-            <vs-option label="Others" value='11'>Others</vs-option>
+          <vs-select placeholder="Area" v-model="field">
+            <vs-option label="Architecture" :value='0'>Architecture</vs-option>
+            <vs-option label="Area, Ethnic, & Multidisciplinary Studies" :value='1'>Area, Ethnic, & Multidisciplinary Studies</vs-option>
+            <vs-option label="Arts: Visual & Performing" :value='2'>Arts: Visual & Performing</vs-option>
+            <vs-option label="Business and Economics" :value='3'>Business and Economics</vs-option>
+            <vs-option label="Communications" :value='4'>Communications</vs-option>
+            <vs-option label="Sociology" :value='5'>Sociology</vs-option>
+            <vs-option label="Computer Science & Mathematics" :value='6'>Computer Science & Mathematics</vs-option>
+            <vs-option label="Education" :value='7'>Education</vs-option>
+            <vs-option label="Engineering" :value='8'>Engineering</vs-option>
+            <vs-option label="Language & Literature" :value='9'>Language & Literature</vs-option>
+            <vs-option label="Philosophy, Religion & Theology" :value='10'>Philosophy, Religion & Theology</vs-option>
+            <vs-option label="Others" :value='11'>Others</vs-option>
           </vs-select>
         </div>
         <vs-button
@@ -65,13 +58,14 @@
 </template>
 
 <script>
+import api from "@/config/api"
 import institutionList from '@/utils/institutionList.js'
+import {closeLoading} from "../../../utils/loading";
 export default {
   name: "profile",
   data () {
     return {
       name: '',
-      email: '',
       institution: '',
       position: '',
       field: '',
@@ -81,7 +75,28 @@ export default {
   },
   methods: {
     saveInfo () {
-      this.$router.push("/pc/faculty");
+      if (this.name === '' || this.institution === '' || this.field === '' || this.position === '') {
+        this.$message.error("Please fill out all information");
+      } else {
+        this.$axios.patch(
+          api.faculty.facultySignup,
+          {
+            name: this.name,
+            institution: this.institution,
+            field: this.field,
+            post: this.position
+          }
+        ).then(res => {
+          this.$message.success("Saved successfully!");
+          setTimeout(() => {
+            this.$router.push("/pc/faculty");
+          }, 2000);
+        }).catch(err => {
+          closeLoading();
+          console.log(err);
+          this.$message.error("Error. Please contact admin");
+        })
+      }
     }
   }
 }
@@ -141,6 +156,12 @@ export default {
   width: 35rem;
 }
 /deep/ .vs-select__input.simple {
+  height: 3rem;
+  font-size: 1rem;
+  padding-left: 1.5rem;
+}
+/deep/ .vs-input {
+  width: 35rem;
   height: 3rem;
   font-size: 1rem;
   padding-left: 1.5rem;

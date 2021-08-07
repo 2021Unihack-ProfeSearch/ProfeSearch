@@ -108,39 +108,56 @@
 </template>
 
 <script>
+import api from "@/config/api";
+import {closeLoading} from "@/utils/loading";
+import parseDate from "../../../utils/parseDate";
 export default {
   name: "positionDetail",
   mounted() {
-    let positionFinal = '';
-    this.audience.forEach(aud => {
-      positionFinal += aud + ', ';
-    })
-    if (positionFinal.length > 0) {
-      positionFinal = positionFinal.substr(0,positionFinal.length - 2);
-    }
-    this.audience = positionFinal;
     document.getElementById("goBackDiv").addEventListener("mouseover", function () {
       document.getElementById("goBack").setAttribute("fill", "#FF8626");
     })
     document.getElementById("goBackDiv").addEventListener("mouseout", function () {
       document.getElementById("goBack").setAttribute("fill", "#8a8a8a");
     })
+    this.$axios.get(api.position.getAllPositions + '/' + this.$route.params.positionId).then(res => {
+      console.log(res);
+      this.institution = res.data.position.faculty.institution;
+      this.title = res.data.position.title;
+      this.deadline = parseDate(res.data.position.deadline);
+      this.area = res.data.position.area;
+      this.location = res.data.position.location;
+      this.description = res.data.position.description;
+      this.status = res.data.position.status.toLowerCase();
+      this.type = res.data.position.positionType;
+      // TODO: faculty 一个position少返回申请的学生的信息
+      //this.users = res.data.position
+      let positionFinal = '';
+      res.data.position.target.forEach(aud => {
+        positionFinal += aud + ', ';
+      })
+      if (positionFinal.length > 0) {
+        positionFinal = positionFinal.substr(0,positionFinal.length - 2);
+      }
+      this.audience = positionFinal;
+    }).catch(err => {
+      console.log(err);
+      closeLoading();
+      this.$message.error("Error, please contact admin");
+    })
   },
   data () {
     return {
-      positionId: 1720192381,
-      institution: "University of Southern California",
-      title: "Research Assistant",
-      deadline: '2021-08-23',
-      area: "Computer Science",
-      location: "In person",
-      audience: ["Freshman","Sophomore"],
-      description: "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. " +
-        "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.The quick brown " +
-        "fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.",
-      status: "unfulfilled",
-      type: "Research",
-      // TODO status: application.status.toLowerCase()
+      positionId: this.$route.params.positionId,
+      institution: '',
+      title: '',
+      deadline: '',
+      area: '',
+      location: '',
+      audience: [],
+      description: '',
+      status: '',
+      type: '',
       page: 1,
       max: 3,
       dialogOpen: false,
@@ -233,15 +250,25 @@ export default {
       window.history.back();
     },
     closePosition() {
-      // TODO: close position
       this.dialogOpen = false;
+      this.$axios.patch(api.position.getAllPositions + '/' + this.positionId, {
+        status: 3
+      }).then(res => {
+        this.$message.success("The position is closed.");
+        setTimeout(() => {
+          this.$router.replace('/pc/faculty/MyPosition');
+        })
+      }).catch(err => {
+        console.log(err)
+        closeLoading();
+        this.$message.error("Error closing the position");
+      })
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-
 .positionInfo {
   margin: 0 6rem;
   .title {

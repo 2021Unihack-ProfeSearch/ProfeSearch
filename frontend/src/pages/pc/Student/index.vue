@@ -51,15 +51,33 @@
 </template>
 
 <script>
+import api from "@/config/api"
 import NavLink from "@/components/nav-link";
+import {closeLoading} from "../../../utils/loading";
 export default {
   name: "index",
   components: {NavLink},
+  mounted() {
+    if (this.$route.name === 'studentMyApplication' || this.$route.name === 'applicationDetail') {
+      this.navActive = 'success';
+    } else if (this.$route.name === 'studentProfile') {
+      this.navActive = 'danger';
+    } else {
+      this.navActive = 'primary';
+    }
+    this.$axios.get(api.student.getStudentProfile).then((res) => {
+      this.username = res.data.CommonApp.name;
+    }).catch(err => {
+      //console.log(err);
+      closeLoading();
+      this.$message.error("Fail to get student information. Please contact admin");
+    })
+  },
   data () {
     return {
       profLogo: require("@/assets/logo_white.png"),
       profile: require("@/assets/UserPage/profile.png"),
-      username: "Lorena",
+      username: '',
       navColor: 'primary',
       navActive: 'success',
       dialogOpen: false
@@ -70,8 +88,29 @@ export default {
       this.$router.push(link);
     },
     logout () {
-      this.$router.push("/pc/home");
+      this.dialogOpen = false;
+      this.$axios.get(api.authentication.logout).then((res) => {
+        this.$message.success("You have logged out");
+        setTimeout(() => {
+          this.$router.push("/pc/home");
+        }, 2000);
+      }).catch(err => {
+        console.log(err);
+        closeLoading();
+        this.$message.error("Error. Please contact admin");
+      })
     }
+  },
+  watch: {
+    '$route' (val) {
+      if (val.name === 'studentMyApplication' || val.name === 'applicationDetail') {
+        this.navActive = 'success';
+      } else if (val.name === 'studentProfile') {
+        this.navActive = 'danger';
+      } else {
+        this.navActive = 'primary';
+      }
+    },
   }
 }
 </script>
@@ -99,5 +138,8 @@ export default {
 /deep/ .vs-navbar__item {
   font-size: 1.1rem;
   margin: 0 0.5rem;
+}
+/deep/ .vs-navbar-content {
+  z-index: 1;
 }
 </style>

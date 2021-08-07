@@ -49,6 +49,9 @@
 </template>
 
 <script>
+import api from "@/config/api";
+import {closeLoading} from "../../../utils/loading";
+import parseDate from "../../../utils/parseDate";
 export default {
   name: "applicationDetail",
   mounted() {
@@ -58,24 +61,35 @@ export default {
     document.getElementById("goBackDiv").addEventListener("mouseout", function () {
       document.getElementById("goBack").setAttribute("fill", "#8a8a8a");
     })
-    // 请求Application详情
-    // let appId = this.$route.params.positionId
+    this.$axios.get(api.position.getAllPositions + '/' + this.$route.params.positionId).then(res => {
+      console.log(res);
+      this.positionId = res.data.Position._id;
+      this.institution = res.data.Position.faculty.institution;
+      this.title = res.data.Position.title;
+      this.deadline = parseDate(res.data.Position.deadline);
+      this.area = res.data.Position.area;
+      this.releaser = res.data.Position.faculty.name;
+      this.location = res.data.Position.location;
+      this.description = res.data.Position.description;
+      this.status = res.data.Position.status.toLowerCase();
+      this.type = res.data.Position.positionType;
+    }).catch(err => {
+      closeLoading();
+      this.$message.error("Error. Please contact admin");
+    })
   },
   data () {
     return {
-      positionId: 1720192381,
-      institution: "University of Southern California",
-      title: "Research Assistant",
-      deadline: '2021-08-23',
-      area: "Computer Science",
-      releaser: "Aaron Cote",
-      location: "In person",
-      description: "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. " +
-        "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.The quick brown " +
-        "fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.",
-      status: "unfulfilled",
-      type: "Research"
-      // TODO status: application.status.toLowerCase()
+      positionId: '',
+      institution: '',
+      title: '',
+      deadline: '',
+      area: '',
+      releaser: '',
+      location: "",
+      description: '',
+      status: '',
+      type: ''
     }
   },
   methods: {

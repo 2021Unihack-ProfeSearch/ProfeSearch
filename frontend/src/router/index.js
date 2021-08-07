@@ -74,16 +74,20 @@ export default new Router({
         component: facultySignUp
       },{
         path: 'student',
+        name: 'studentIndex',
         component: stuIndex,
         redirect: 'student/MyApplication',
         children: [{
           path: 'profile',
+          name: 'studentProfile',
           component: stuProfile
         },{
           path: 'FindPosition',
+          name: 'studentFindPosition',
           component: stuFindPosition
         },{
           path: 'MyApplication',
+          name: 'studentMyApplication',
           component: stuMyApplication
         },{
           path: 'MyApplication/detail',
@@ -100,15 +104,19 @@ export default new Router({
         redirect: 'faculty/MyPosition',
         children: [{
           path: 'profile',
+          name: 'facultyProfile',
           component: facultyProfile
         },{
           path: 'MyPosition',
+          name: 'facultyMyPosition',
           component: facultyPosition
         },{
           path: 'AddPosition',
+          name: 'facultyAddPosition',
           component: facultyAddPosition
         },{
           path: 'MyPosition/detail',
+          name: 'facultyPositionDetail',
           component: facultyPositionDetail
         }]
       }]

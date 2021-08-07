@@ -11,13 +11,6 @@
             placeholder="Lorena Yan"/>
         </div>
         <div class="myInput">
-          <span class="inputLabel">Email</span>
-          <vs-input
-            primary
-            v-model="email"
-            placeholder="profesearch@youremail.com"/>
-        </div>
-        <div class="myInput">
           <span class="inputLabel">Institution</span><br/>
           <el-select v-model="institution" placeholder="Select your institution">
             <el-option
@@ -29,11 +22,15 @@
           </el-select>
         </div>
         <div class="myInput">
-          <span class="inputLabel">Major</span>
-          <vs-input
-            primary
-            v-model="major"
-            placeholder="Computer Science"/>
+          <span class="inputLabel">Major</span><br/>
+          <el-select v-model="major" placeholder="Major">
+            <el-option
+              v-for="(major, index) in majorList"
+              :key="index"
+              :label="major"
+              :value="index">
+            </el-option>
+          </el-select><br/>
         </div>
         <div class="myInput">
           <span class="inputLabel">My Resume</span><br/>
@@ -50,38 +47,19 @@
         </div>
         <div class="myInput">
           <span class="inputLabel">Grade</span><br/>
-          <vs-select
-            v-model="grade"
-            placeholder="Select Your Grade"
-            style="display: inline-block"
-          >
-<!--            0 freshman, 1 sophomore, 2 junior, 3 senior, 4 master, 5 doctor, 6 post-doc-->
-            <vs-option label="Freshman" value="0">
-              Freshman
-            </vs-option>
-            <vs-option label="Sophomore" value="1">
-              Sophomore
-            </vs-option>
-            <vs-option label="Junior" value="2">
-              Junior
-            </vs-option>
-            <vs-option label="Senior" value="3">
-              Senior
-            </vs-option>
-            <vs-option label="Master" value="4">
-              Master
-            </vs-option>
-            <vs-option label="Doctor" value="5">
-              Doctor
-            </vs-option>
-            <vs-option label="Post Doctor" value="6">
-              Post Doctor
-            </vs-option>
-          </vs-select>
+          <el-select v-model="grade" placeholder="Grade">
+            <el-option
+              v-for="(grade, index) in gradeList"
+              :key="index"
+              :label="grade"
+              :value="index">
+            </el-option>
+          </el-select><br/>
           <vs-button
-            :active="saveBtn === 1"
-            @click="active = 1"
+            :active="false"
+            @click="saveInfo"
             class="saveBtn"
+            style="margin-top: 2rem;"
           >
             Save My Info
           </vs-button>
@@ -92,20 +70,59 @@
 </template>
 
 <script>
-import institutionList from '@/utils/institutionList.js'
+import api from "@/config/api"
+import institutionList from '@/utils/institutionList'
+import {closeLoading} from "@/utils/loading";
+import gradeList from "@/utils/gradeList";
+import majorList from "../../../utils/majorList";
 export default {
   name: "profile",
+  mounted() {
+    this.$axios.get(api.student.getStudentProfile).then((res) => {
+      //console.log(res);
+      this.name = res.data.CommonApp.name;
+      this.institution = res.data.CommonApp.institution;
+      this.major = res.data.CommonApp.major;
+      this.grade = res.data.CommonApp.grade;
+    }).catch(err => {
+      //console.log(err);
+      closeLoading();
+      this.$message.error("Fail to get student information. Please contact admin");
+    })
+  },
   data () {
     return {
       name: '',
-      email: '',
+      //email: '',
       institution: '',
       major: '',
       grade: '',
       resume: '',
-      saveBtn: 0,
       uploadActive: 0,
-      institutionList: institutionList
+      institutionList: institutionList,
+      gradeList: gradeList,
+      majorList: majorList
+    }
+  },
+  methods: {
+    saveInfo () {
+      this.$axios.patch(
+        api.student.studentSignup,
+        {
+          name: this.name,
+          //email: this.email,
+          institution: this.institution,
+          major: this.major,
+          grade: this.grade
+        }
+      ).then(res => {
+        this.$message.success("Saved successfully!");
+        location.reload();
+      }).catch(err => {
+        closeLoading();
+        console.log(err);
+        this.$message.error("Error. Please contact admin");
+      })
     }
   }
 }

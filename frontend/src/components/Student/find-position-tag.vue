@@ -4,16 +4,19 @@
     <div style="margin-left: 7rem;">
       <span style="font-size: 1.3rem;font-weight: 600;color: rgb(107 102 102);">{{institution}}</span><br/>
       <span style="font-size: 1.7rem;font-weight: bold;">{{title}}</span><br/>
-      <span>Deadline: {{deadline}}</span><br/>
     </div>
     <div style="margin-left: 7rem;margin-top: 1.5rem;">
       <div style="display: inline-block;margin-right: 5rem;">
+        <b>Deadline</b> &nbsp;
+        <span>{{deadline}}</span><br/>
         <b>Areas</b> &nbsp;
         <span>{{area}}</span><br/>
         <b>Audience</b> &nbsp;
         <span>{{audience}}</span>
       </div>
       <div style="display: inline-block;">
+        <b>Type</b> &nbsp;
+        <span>{{type}}</span><br/>
         <b>Posted by</b> &nbsp;
         <span>{{releaser}}</span><br/>
         <b>Location</b> &nbsp;
@@ -32,6 +35,8 @@
 </template>
 
 <script>
+import parseDate from "../../utils/parseDate";
+
 export default {
   name: "find-position-tag",
   props: {
@@ -49,15 +54,16 @@ export default {
   },
   data () {
     return {
-      positionId: this.position.positionId,
+      positionId: this.position._id,
       title: this.position.title,
-      deadline: this.position.deadline,
+      deadline: parseDate(this.position.deadline),
       area: this.position.area,
-      releaser: this.position.releaser,
-      institutionImg: this.position.institutionImg,
+      releaser: this.position.faculty.name,
+      type: this.position.positionType,
       location: this.position.location,
-      institution: this.position.institution,
-      audience: this.position.audience
+      institution: this.position.faculty.institution,
+      audience: this.position.target,
+      institutionImg: require('@/assets/USC.png')
     }
   },
   methods: {

@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import {closeLoading} from "@/utils/loading";
+import api from "@/config/api"
     export default {
         name: 'Login',
         data() {
@@ -28,12 +30,28 @@
         },
         methods: {
             login() {
-              // TODO: 等登陆API
-              let isStudent = true;
-              if (isStudent) {
-                this.$router.push("/pc/student");
+              if (this.input.username === '' || this.input.password === '') {
+                this.$message.error("Please enter your email and password");
               } else {
-                this.$router.push("/pc/faculty");
+                this.$axios.post(
+                  api.authentication.login,
+                  {
+                    email: this.input.username,
+                    password: this.input.password
+                  }
+                ).then(res => {
+                  this.$message.success("Login successfully!");
+                  setTimeout(() => {
+                    if (res.data.user.role === "student") {
+                      this.$router.push("/pc/student");
+                    } else {
+                      this.$router.push("/pc/faculty");
+                    }
+                  })
+                }).catch(err => {
+                  closeLoading();
+                  this.$message.error("Username or password incorrect");
+                })
               }
             }
         }

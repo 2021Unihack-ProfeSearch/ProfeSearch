@@ -5,10 +5,12 @@ import App from './App'
 import router from './router'
 import Vuesax from 'vuesax'
 import 'vuesax/dist/vuesax.css' //Vuesax styles
-import ElementUI from 'element-ui';
+import ElementUI, {Loading} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import locale from 'element-ui/lib/locale/lang/en';
+import Axios from "./config/axios";
 
+Vue.prototype.$axios = Axios
 Vue.use(ElementUI, {locale});
 Vue.use(Vuesax, {
   colors: {

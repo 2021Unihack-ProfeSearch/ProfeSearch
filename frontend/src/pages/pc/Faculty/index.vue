@@ -2,7 +2,7 @@
   <div>
     <!--    NavBar-->
     <div class="center examplex">
-      <vs-navbar text-white :color="active" center-collapsed v-model="active">
+      <vs-navbar text-white :color="navColor" center-collapsed v-model="active">
         <template #left>
           <svg width="66" height="66" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" overflow="hidden"><defs><clipPath id="clip0"><rect x="200" y="624" width="66" height="66"/></clipPath><clipPath id="clip1"><rect x="201" y="625" width="65" height="65"/></clipPath><clipPath id="clip2"><rect x="201" y="625" width="65" height="65"/></clipPath><clipPath id="clip3"><rect x="201" y="625" width="65" height="65"/></clipPath></defs><g clip-path="url(#clip0)" transform="translate(-200 -624)"><g clip-path="url(#clip1)"><g clip-path="url(#clip2)"><g clip-path="url(#clip3)"><path d="M248.523 665.293C244.664 664.311 241.339 661.976 237.264 657.251L237.128 657.09 237.256 656.943C241.193 652.401 244.638 649.375 248.648 649.375 251.124 649.372 253.459 650.532 254.952 652.508L250.986 654.798 261.07 657.5 263.772 647.411 259.658 649.787C257.181 646.139 253.057 643.956 248.648 643.958 242.099 643.958 237.31 648.611 233.161 653.394 229.01 648.606 224.224 643.958 217.675 643.958 210.395 643.906 204.451 649.766 204.399 657.046 204.347 664.326 210.206 670.27 217.486 670.322 217.549 670.322 217.612 670.322 217.675 670.322 224.202 670.322 228.831 665.799 233.161 660.787 237.456 665.768 242.12 669.792 248.648 670.322 255.978 670.915 261.163 665.135 261.211 660.738 261.211 660.733 261.207 660.729 261.201 660.729 261.198 660.729 261.194 660.732 261.193 660.735 260.152 663.898 253.824 666.641 248.523 665.293ZM229.063 657.245C224.871 662.097 221.663 664.905 217.675 664.905 213.387 664.975 209.854 661.554 209.784 657.266 209.715 652.977 213.135 649.444 217.424 649.375 217.508 649.374 217.591 649.374 217.675 649.375 221.687 649.375 225.131 652.4 229.068 656.943L229.197 657.09Z" fill="#FFFFFF" fill-rule="nonzero" fill-opacity="1"/></g></g></g></g></svg>
           <span style="font-size: 1.3rem;margin-left: 1rem;font-weight: 600;">ProfeSearch</span>
@@ -51,17 +51,37 @@
 </template>
 
 <script>
+import api from "@/config/api"
 import NavLink from "@/components/nav-link";
+import {closeLoading} from "../../../utils/loading";
 export default {
   name: "index",
   components: {NavLink},
+  mounted() {
+    if (this.$route.name === 'facultyMyPosition' || this.$route.name === 'facultyPositionDetail') {
+      this.active = 'primary';
+    } else if (this.$route.name === 'facultyAddPosition') {
+      this.active = 'success';
+    } else {
+      this.active = 'danger';
+    }
+    console.log(this.active);
+    this.$axios.get(api.faculty.getFacultyProfile).then((res) => {
+      this.username = res.data.profile.name;
+    }).catch(err => {
+      //console.log(err);
+      closeLoading();
+      this.$message.error("Fail to get student information. Please contact admin");
+    })
+  },
   data () {
     return {
       profLogo: require("@/assets/logo_white.png"),
       profile: require("@/assets/UserPage/profile.png"),
-      username: "Prof. Lorena",
-      active: 'primary',
-      dialogOpen: false
+      username: '',
+      active: '',
+      dialogOpen: false,
+      navColor: 'primary'
     }
   },
   methods: {
@@ -69,7 +89,17 @@ export default {
       this.$router.push(link);
     },
     logout () {
-      this.$router.push("/pc/home");
+      this.dialogOpen = false;
+      this.$axios.get(api.authentication.logout).then((res) => {
+        this.$message.success("You have logged out");
+        setTimeout(() => {
+          this.$router.push("/pc/home");
+        }, 2000);
+      }).catch(err => {
+        console.log(err);
+        closeLoading();
+        this.$message.error("Error. Please contact admin");
+      })
     }
   }
 }
@@ -107,5 +137,8 @@ export default {
 /deep/ .vs-navbar__item {
   font-size: 1.1rem;
   margin: 0 0.5rem;
+}
+/deep/ .vs-navbar-content {
+  z-index: 1;
 }
 </style>

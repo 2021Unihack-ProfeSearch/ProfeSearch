@@ -28,8 +28,8 @@
     <div style="width: 30rem;margin-left: 1rem;">{{description}}</div>
     <vs-button
       flat
-      :active="active === 0"
-      @click="active = 0"
+      :active="false"
+      @click="goToSignup"
       style="width: 10rem;
         font-size: 1.5rem;
         height: 3rem;

@@ -4,7 +4,7 @@
         <h1 style="width: 23rem;">Get Started Right Now.</h1>
         <vs-input id="name" size="large" type="text" name="username" v-model="input.email" label-placeholder="Email" />
         <vs-input id="password" type="password" name="password" v-model="input.password" label-placeholder="Password" />
-        <vs-input id="confirm" type="confirm" name="confirm" v-model="confirm" label-placeholder="Confirm Password" />
+        <vs-input id="confirm" type="password" name="confirm" v-model="confirm" label-placeholder="Confirm Password" />
 
         <div style="display: flex;justify-content: space-around;margin-top: 1rem;">
           <vs-radio v-model="role" val="student">
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import api from '@/config/api'
+import {closeLoading} from "../../utils/loading";
     export default {
         name: 'Signup',
         data() {
@@ -35,9 +37,7 @@
               role: null,
                 input: {
                   email: "",
-                  password: "",
-                  prof: '',
-                  institution:""
+                  password: ""
                 },
               confirm: '',
               active: ''
@@ -45,10 +45,39 @@
         },
         methods: {
             signup() {
-              if (this.role === 'student') {
-                this.$router.push("/pc/student/signup");
+              // 验证信息
+              if (this.input.email === "" || this.input.email.indexOf("@") <= -1) {
+                this.$message.error('Please correctly enter your email address');
+              } else if (this.input.password === "") {
+                this.$message.error('Please enter your password');
+              } else if (this.confirm !== this.input.password) {
+                this.$message.error('Two passwords are not the same');
+              } else if (this.role === null) {
+                this.$message.error('Please select your role');
               } else {
-                this.$router.push("/pc/faculty/signup");
+                this.$axios.post(
+                  api.authentication.signup,
+                  {
+                    role: this.role,
+                    email: this.input.email,
+                    password: this.input.password,
+                    passwordConfirm: this.confirm
+                  }
+                ).then(res => {
+                  console.log(res)
+                  this.$message.success('Signed up successfully!');
+                  setTimeout(() => {
+                    if (this.role === 'student') {
+                      this.$router.push("/pc/student/signup");
+                    } else {
+                      this.$router.push("/pc/faculty/signup");
+                    }
+                  }, 2000);
+                }).catch(err => {
+                  console.log(err);
+                  closeLoading();
+                  this.$message.error("Error. Please contact admin");
+                })
               }
             }
         },

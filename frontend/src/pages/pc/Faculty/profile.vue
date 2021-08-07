@@ -11,13 +11,6 @@
             placeholder="Lorena Yan"/>
         </div>
         <div class="myInput">
-          <span class="inputLabel">Email</span>
-          <vs-input
-            primary
-            v-model="email"
-            placeholder="professor@youremail.com"/>
-        </div>
-        <div class="myInput">
           <span class="inputLabel">Institution</span><br/>
           <el-select v-model="institution" placeholder="Select your institution">
             <el-option
@@ -36,25 +29,19 @@
             placeholder="Professor/Advisor/..."/>
         </div>
         <div class="myInput">
-          <span class="inputLabel">Field</span>
-          <vs-select placeholder="Area" v-model="field" id="majorSelector">
-            <vs-option label="Architecture" value='0'>Architecture</vs-option>
-            <vs-option label="Area, Ethnic, & Multidisciplinary Studies" value='1'>Area, Ethnic, & Multidisciplinary Studies</vs-option>
-            <vs-option label="Arts: Visual & Performing" value='2'>Arts: Visual & Performing</vs-option>
-            <vs-option label="Business and Economics" value='3'>Business and Economics</vs-option>
-            <vs-option label="Communications" value='4'>Communications</vs-option>
-            <vs-option label="Sociology" value='5'>Sociology</vs-option>
-            <vs-option label="Computer Science & Mathematics" value='6'>Computer Science & Mathematics</vs-option>
-            <vs-option label="Education" value='7'>Education</vs-option>
-            <vs-option label="Engineering" value='8'>Engineering</vs-option>
-            <vs-option label="Language & Literature" value='9'>Language & Literature</vs-option>
-            <vs-option label="Philosophy, Religion & Theology" value='10'>Philosophy, Religion & Theology</vs-option>
-            <vs-option label="Others" value='11'>Others</vs-option>
-          </vs-select>
+          <span class="inputLabel">Field</span><br/>
+          <el-select v-model="field" placeholder="Select your field">
+            <el-option
+              v-for="(field, index) in majorList"
+              :key="index"
+              :label="field"
+              :value="index">
+            </el-option>
+          </el-select>
         </div>
         <vs-button
-          :active="saveBtn === 1"
-          @click="active = 1"
+          :active="false"
+          @click="saveInfo"
           class="saveBtn"
         >
           Save My Info
@@ -65,18 +52,54 @@
 </template>
 
 <script>
+import api from "@/config/api"
+import {closeLoading} from "@/utils/loading";
 import institutionList from '@/utils/institutionList.js'
+import majorList from "../../../utils/majorList";
 export default {
   name: "profile",
+  mounted() {
+    this.$axios.get(api.faculty.getFacultyProfile).then((res) => {
+      console.log(res);
+      this.name = res.data.profile.name;
+      this.institution = res.data.profile.institution;
+      this.position = res.data.profile.post;
+      this.field = res.data.profile.field;
+    }).catch(err => {
+      //console.log(err);
+      closeLoading();
+      this.$message.error("Fail to get student information. Please contact admin");
+    })
+  },
   data () {
     return {
       name: '',
-      email: '',
       institution: '',
       position: '',
       field: '',
       saveBtn: 0,
-      institutionList: institutionList
+      institutionList: institutionList,
+      majorList: majorList
+    }
+  },
+  methods: {
+    saveInfo () {
+      this.$axios.patch(
+        api.faculty.facultySignup,
+        {
+          name: this.name,
+          institution: this.institution,
+          post: this.position,
+          field: this.field
+        }
+      ).then(res => {
+        this.$message.success("Saved successfully!");
+        location.reload();
+      }).catch(err => {
+        closeLoading();
+        console.log(err);
+        this.$message.error("Error. Please contact admin");
+      })
     }
   }
 }
@@ -142,5 +165,15 @@ export default {
 }
 /deep/ .el-select-dropdown__item.selected {
   color: #FF8626;
+}
+/deep/ .vs-input__label {
+  padding: 0 1rem;
+  font-size: 1rem;
+}
+/deep/ .vs-input {
+  width: 35rem;
+  height: 3rem;
+  font-size: 1rem;
+  padding-left: 1.5rem;
 }
 </style>

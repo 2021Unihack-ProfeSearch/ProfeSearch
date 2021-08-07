@@ -10,13 +10,13 @@
             v-model="name"
             placeholder="Lorena Yan"/>
         </div>
-        <div class="myInput">
-          <span class="inputLabel">Email</span>
-          <vs-input
-            primary
-            v-model="email"
-            placeholder="profesearch@youremail.com"/>
-        </div>
+<!--        <div class="myInput">-->
+<!--          <span class="inputLabel">Email</span>-->
+<!--          <vs-input-->
+<!--            primary-->
+<!--            v-model="email"-->
+<!--            placeholder="profesearch@youremail.com"/>-->
+<!--        </div>-->
         <div class="myInput">
           <span class="inputLabel">Institution</span><br/>
           <el-select v-model="institution" placeholder="Select your institution">
@@ -31,18 +31,18 @@
         <div class="myInput">
           <span class="inputLabel">Major</span>
           <vs-select placeholder="Area" v-model="major" id="majorSelector">
-            <vs-option label="Architecture" value='0'>Architecture</vs-option>
-            <vs-option label="Area, Ethnic, & Multidisciplinary Studies" value='1'>Area, Ethnic, & Multidisciplinary Studies</vs-option>
-            <vs-option label="Arts: Visual & Performing" value='2'>Arts: Visual & Performing</vs-option>
-            <vs-option label="Business and Economics" value='3'>Business and Economics</vs-option>
-            <vs-option label="Communications" value='4'>Communications</vs-option>
-            <vs-option label="Sociology" value='5'>Sociology</vs-option>
-            <vs-option label="Computer Science & Mathematics" value='6'>Computer Science & Mathematics</vs-option>
-            <vs-option label="Education" value='7'>Education</vs-option>
-            <vs-option label="Engineering" value='8'>Engineering</vs-option>
-            <vs-option label="Language & Literature" value='9'>Language & Literature</vs-option>
-            <vs-option label="Philosophy, Religion & Theology" value='10'>Philosophy, Religion & Theology</vs-option>
-            <vs-option label="Others" value='11'>Others</vs-option>
+            <vs-option label="Architecture" :value='0'>Architecture</vs-option>
+            <vs-option label="Area, Ethnic, & Multidisciplinary Studies" :value='1'>Area, Ethnic, & Multidisciplinary Studies</vs-option>
+            <vs-option label="Arts: Visual & Performing" :value='2'>Arts: Visual & Performing</vs-option>
+            <vs-option label="Business and Economics" :value='3'>Business and Economics</vs-option>
+            <vs-option label="Communications" :value='4'>Communications</vs-option>
+            <vs-option label="Sociology" :value='5'>Sociology</vs-option>
+            <vs-option label="Computer Science & Mathematics" :value='6'>Computer Science & Mathematics</vs-option>
+            <vs-option label="Education" :value='7'>Education</vs-option>
+            <vs-option label="Engineering" :value='8'>Engineering</vs-option>
+            <vs-option label="Language & Literature" :value='9'>Language & Literature</vs-option>
+            <vs-option label="Philosophy, Religion & Theology" :value='10'>Philosophy, Religion & Theology</vs-option>
+            <vs-option label="Others" :value='11'>Others</vs-option>
           </vs-select>
         </div>
         <div class="myInput">
@@ -66,25 +66,25 @@
             style="display: inline-block"
           >
             <!--            0 freshman, 1 sophomore, 2 junior, 3 senior, 4 master, 5 doctor, 6 post-doc-->
-            <vs-option label="Freshman" value="0">
+            <vs-option label="Freshman" :value="0">
               Freshman
             </vs-option>
-            <vs-option label="Sophomore" value="1">
+            <vs-option label="Sophomore" :value="1">
               Sophomore
             </vs-option>
-            <vs-option label="Junior" value="2">
+            <vs-option label="Junior" :value="2">
               Junior
             </vs-option>
-            <vs-option label="Senior" value="3">
+            <vs-option label="Senior" :value="3">
               Senior
             </vs-option>
-            <vs-option label="Master" value="4">
+            <vs-option label="Master" :value="4">
               Master
             </vs-option>
-            <vs-option label="Doctor" value="5">
+            <vs-option label="Doctor" :value="5">
               Doctor
             </vs-option>
-            <vs-option label="Post Doctor" value="6">
+            <vs-option label="Post Doctor" :value="6">
               Post Doctor
             </vs-option>
           </vs-select>
@@ -103,7 +103,9 @@
 </template>
 
 <script>
+import api from "@/config/api"
 import institutionList from '@/utils/institutionList.js'
+import {closeLoading} from "../../../utils/loading";
 export default {
   name: "profile",
   mounted() {
@@ -112,7 +114,6 @@ export default {
   data () {
     return {
       name: '',
-      email: '',
       institution: '',
       major: '',
       grade: '',
@@ -124,7 +125,30 @@ export default {
   },
   methods: {
     saveInfo () {
-      this.$router.push("/pc/student");
+      if (this.name === '' || this.institution === '' || this.major === '' || this.grade === '') {
+        this.$message.error("Please fill out all information");
+      } else {
+        this.$axios.patch(
+          api.student.studentSignup,
+          {
+            name: this.name,
+            institution: this.institution,
+            major: this.major,
+            grade: this.grade
+          }
+        ).then(res => {
+          this.$message.success("Saved successfully!");
+          setTimeout(() => {
+            this.$router.push({
+              name: 'studentIndex'
+            });
+          }, 2000);
+        }).catch(err => {
+          closeLoading();
+          console.log(err);
+          this.$message.error("Error. Please contact admin");
+        })
+      }
     }
   }
 }

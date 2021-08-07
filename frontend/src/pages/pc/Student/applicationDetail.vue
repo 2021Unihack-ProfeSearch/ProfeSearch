@@ -44,8 +44,9 @@ export default {
     document.getElementById("goBackDiv").addEventListener("mouseout", function () {
       document.getElementById("goBack").setAttribute("fill", "#8a8a8a");
     })
-    // 请求Application详情
-    // let appId = this.$route.params.appId
+    // TODO let appId = this.$route.params.appId
+    //let appId = this.$route.params.appId
+    //console.log(appId);
   },
   data () {
     return {
