@@ -53,7 +53,8 @@
             <vs-th>Grade</vs-th>
             <vs-th>Student Email</vs-th>
             <vs-th>Student Institution</vs-th>
-            <vs-th>Student Resume</vs-th>
+            <vs-th>Student Skills</vs-th>
+            <vs-th>Linkedin</vs-th>
             <vs-th>Application Status</vs-th>
             <vs-th>Decision</vs-th>
           </vs-tr>
@@ -68,7 +69,8 @@
             <vs-td>{{ tr.grade}}</vs-td>
             <vs-td>{{ tr.student_email }}</vs-td>
             <vs-td>{{ tr.student_institution }}</vs-td>
-            <vs-td>{{ tr.student_resume}}</vs-td>
+            <vs-td>{{ tr.student_skills}}</vs-td>
+            <vs-td><a :href="tr.student_linkedinUrl">{{ tr.student_name}}</a></vs-td>
             <vs-td>
               {{ tr.application_status}}
             </vs-td>
@@ -150,7 +152,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -158,7 +161,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -166,7 +170,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -174,7 +179,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -182,7 +188,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -190,7 +197,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -198,7 +206,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -206,7 +215,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -214,7 +224,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         },
         {
@@ -222,7 +233,8 @@ export default {
           grade: "Freshman",
           student_email: "lorena@haha.edu",
           student_institution: "University of Southern California",
-          student_resume:"student_resume",
+          student_skills:"C++; Javascript",
+          student_linkedinUrl:'https://www.linkedin.com/in/furong-jia-4a033a1bb/',
           application_status:"Accepted",
         }
       ]
