@@ -109,7 +109,7 @@ export default new Router({
           component: facultyAddPosition
         },{
           path: 'MyPosition/detail',
-          component: facultyAddPosition
+          component: facultyPositionDetail
         }]
       }]
     },

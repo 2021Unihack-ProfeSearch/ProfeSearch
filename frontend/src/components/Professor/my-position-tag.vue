@@ -27,6 +27,7 @@
         flat
         :active="false"
         style="display: inline-block;font-size: 13px;"
+        @click="goToPositionDetail"
       >
         Full Details
       </vs-button>
@@ -69,7 +70,13 @@ export default {
       deadline: this.position.deadline,
       status: this.position.position_status
     }
+  },
+  methods: {
+    goToPositionDetail(){
+      this.$router.push('myPosition/detail')
+    }
   }
+
 }
 </script>
 
