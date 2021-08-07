@@ -53,7 +53,7 @@
             <vs-th>Grade</vs-th>
             <vs-th>Student Email</vs-th>
             <vs-th>Student Institution</vs-th>
-            <vs-th>Student Resume</vs-th>
+<!--            <vs-th>Student Resume</vs-th>-->
             <vs-th>Application Status</vs-th>
             <vs-th>Decision</vs-th>
           </vs-tr>
@@ -64,17 +64,20 @@
             v-for="(tr, i) in $vs.getPage(users, page, max)"
             :data="tr"
           >
-            <vs-td>{{ tr.student_name }}</vs-td>
-            <vs-td>{{ tr.grade}}</vs-td>
-            <vs-td>{{ tr.student_email }}</vs-td>
-            <vs-td>{{ tr.student_institution }}</vs-td>
-            <vs-td>{{ tr.student_resume}}</vs-td>
+            <vs-td>{{ tr.student.name }}</vs-td>
+            <vs-td>{{ tr.student.grade}}</vs-td>
+            <vs-td>{{ tr.student.user.email }}</vs-td>
+            <vs-td>{{ tr.student.institution }}</vs-td>
+<!--            <vs-td>{{ tr.student_resume}}</vs-td>-->
             <vs-td>
-              {{ tr.application_status}}
+              {{ tr.status}}
             </vs-td>
             <vs-td>
-              <vs-button style="display:inline" success border :active="false">Accept</vs-button>
-              <vs-button style="display:inline" danger border :active="false">Reject</vs-button>
+              <div v-if="tr.status === 'processing'">
+                <vs-button style="display:inline" success border :active="false" @click="accept(tr._id)" >Accept</vs-button>
+                <vs-button style="display:inline" danger border :active="false" @click="reject(tr._id)">Reject</vs-button>
+              </div>
+              <span v-else>N/A</span>
             </vs-td>
           </vs-tr>
         </template>
@@ -130,8 +133,8 @@ export default {
       this.description = res.data.position.description;
       this.status = res.data.position.status.toLowerCase();
       this.type = res.data.position.positionType;
-      // TODO: faculty 一个position少返回申请的学生的信息
-      //this.users = res.data.position
+      this.users = res.data.position.applications
+      console.log(this.users);
       let positionFinal = '';
       res.data.position.target.forEach(aud => {
         positionFinal += aud + ', ';
@@ -161,88 +164,7 @@ export default {
       page: 1,
       max: 3,
       dialogOpen: false,
-      users: [
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        },
-        {
-          student_name: "Lorena",
-          grade: "Freshman",
-          student_email: "lorena@haha.edu",
-          student_institution: "University of Southern California",
-          student_resume:"student_resume",
-          application_status:"Accepted",
-        }
-      ]
+      users: []
     }
   },
   methods: {
@@ -262,6 +184,34 @@ export default {
         console.log(err)
         closeLoading();
         this.$message.error("Error closing the position");
+      })
+    },
+    accept (appId) {
+      this.$axios.patch(
+        api.application.studentGetAllApplications + '/' + appId,{
+          status: 3
+        }
+      ).then(res => {
+        this.$message.success("You have accepted the student's application.");
+        this.$router.replace('/pc/faculty/MyPosition');
+      }).catch(err => {
+        closeLoading();
+        console.log(err);
+        this.$message.error("Error. Please contact admin");
+      })
+    },
+    reject (appId) {
+      this.$axios.patch(
+        api.application.studentGetAllApplications + '/' + appId,{
+          status: 1
+        }
+      ).then(res => {
+        this.$message.success("You have rejected the student's application.");
+        location.reload();
+      }).catch(err => {
+        closeLoading();
+        console.log(err);
+        this.$message.error("Error. Please contact admin");
       })
     }
   }

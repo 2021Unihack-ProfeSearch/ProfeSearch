@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import api from "../../../config/api";
+import {closeLoading} from "../../../utils/loading";
 export default {
   name: "applicationDetail",
   mounted() {
@@ -44,9 +46,13 @@ export default {
     document.getElementById("goBackDiv").addEventListener("mouseout", function () {
       document.getElementById("goBack").setAttribute("fill", "#8a8a8a");
     })
-    // TODO let appId = this.$route.params.appId
-    //let appId = this.$route.params.appId
-    //console.log(appId);
+    this.$axios.get(api.application.studentGetSingleApplication + '/' + this.$route.params.appId).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+      closeLoading();
+      this.$message.error("Error getting application info. Please try again later");
+    })
   },
   data () {
     return {

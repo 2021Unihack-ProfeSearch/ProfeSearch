@@ -11,7 +11,8 @@
         <span class="statusSpan" style="background: #DDDDDD;color: #777777;" v-if="status === 'closed'">Closed</span>
         <span class="statusSpan" style="background: #FFDB99;color: #FF8626"  v-else-if="status === 'unfulfilled'">Unfulfilled</span>
         <span class="statusSpan" style="background: #CFEDB1;color: #30C530;" v-else>Fulfilled</span>
-        <vs-button class="acceptBtn" v-if="status === 'unfulfilled'" success flat :active="false">Apply!</vs-button>
+        <vs-button class="acceptBtn" v-if="status === 'unfulfilled' && !hasApplied" success flat :active="false" @click="apply">Apply!</vs-button>
+        <vs-button class="acceptBtn" v-if="hasApplied" success flat active-disabled>Have Applied</vs-button>
       </div>
       <div>
         <div class="infoSection">
@@ -62,7 +63,7 @@ export default {
       document.getElementById("goBack").setAttribute("fill", "#8a8a8a");
     })
     this.$axios.get(api.position.getAllPositions + '/' + this.$route.params.positionId).then(res => {
-      console.log(res);
+      //console.log(res);
       this.positionId = res.data.Position._id;
       this.institution = res.data.Position.faculty.institution;
       this.title = res.data.Position.title;
@@ -73,6 +74,7 @@ export default {
       this.description = res.data.Position.description;
       this.status = res.data.Position.status.toLowerCase();
       this.type = res.data.Position.positionType;
+      this.hasApplied = res.data.Applied;
     }).catch(err => {
       closeLoading();
       this.$message.error("Error. Please contact admin");
@@ -89,12 +91,27 @@ export default {
       location: "",
       description: '',
       status: '',
-      type: ''
+      type: '',
+      hasApplied: ''
     }
   },
   methods: {
     goBack () {
       window.history.back();
+    },
+    apply () {
+      this.$axios.post(
+        api.application.createNewApplication + '/' + this.positionId
+      ).then(res => {
+        this.$message.success("Successfully applied!");
+        setTimeout(() => {
+          location.reload();
+        })
+      }).catch(err => {
+        console.log(err);
+        closeLoading();
+        this.$message.error("Error creating application. Please try again later.");
+      })
     }
   }
 }

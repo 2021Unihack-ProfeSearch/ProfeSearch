@@ -73,8 +73,8 @@ export default {
   mounted() {
     this.$axios.get(api.application.studentGetAllApplications, {
     }).then((res) => {
-      //this.applicationList = res.data.Positions;
-      console.log(res)
+      this.applicationList = res.data.Applications;
+      console.log(res);
     }).catch(err => {
       closeLoading();
       console.log(err);

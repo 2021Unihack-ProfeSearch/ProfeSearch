@@ -13,6 +13,14 @@
         <vs-option label="Others" :value='2'>Others</vs-option>
       </vs-select>
 
+      <!--   status(0 unfulfilled, 1 fulfilled, 2 closed) -->
+      <vs-select placeholder="Status" v-model="status">
+        <vs-option label="All" :value='-1'>All</vs-option>
+        <vs-option label="Unfulfilled" :value='0'>Unfulfilled</vs-option>
+        <vs-option label="Fulfilled" :value='1'>Fulfilled</vs-option>
+        <vs-option label="Closed" :value='2'>Closed</vs-option>
+      </vs-select>
+
 <!--      Area-->
       <vs-select placeholder="Area" v-model="area">
         <vs-option label="All" :value='-1'>All</vs-option>
@@ -88,6 +96,7 @@ export default {
       audience: '',
       //deadline: '',
       releaser: '',
+      status: '',
       saveBtn: 0,
       positionList: []
     }
@@ -107,7 +116,10 @@ export default {
       if (this.location !== '' && this.location !== -1) {
         content.location = this.location + 1;
       }
-      // TODO: 学生position搜索功能test
+      if (this.status !== '' && this.status !== -1) {
+        content.status = this.status + 1;
+      }
+      console.log(content.status);
       console.log(typeof content.deadline);
       this.$axios.get(api.position.getAllPositions, {
         params: content

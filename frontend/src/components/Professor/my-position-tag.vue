@@ -51,8 +51,6 @@ export default {
     }
     this.audience = result;
     // 0 unfulfilled, 1 fulfilled, 2
-    // TODO 改边框样式
-    // console.log(this.status)
     if (this.position.status.toLowerCase() === 'unfulfilled') {
       this.$refs.position.style = "border: 2px solid #FF8626";
     } else if (this.position.status.toLowerCase() === 'fulfilled') {

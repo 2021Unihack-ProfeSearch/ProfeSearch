@@ -17,6 +17,8 @@ export default {
     getFacultyProfile: "/api/faculties/myProfile"
   },
   application: {
-    studentGetAllApplications: "/api/myApplication"
+    studentGetAllApplications: "/api/applications",
+    studentGetSingleApplication : "/api/applications",
+    createNewApplication: "/api/applications/positions"
   }
 }

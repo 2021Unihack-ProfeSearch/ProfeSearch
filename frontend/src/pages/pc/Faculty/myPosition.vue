@@ -113,7 +113,6 @@ export default {
       if (this.target_audience !== '' && this.target_audience !== -1) {
         content.target = this.target_audience;
       }
-      // TODO: Faculty my position搜索功能test
       console.log(content);
       this.$axios.get(api.position.getAllPositions, {
         params: content

@@ -44,14 +44,14 @@ export default {
   },
   data () {
     return {
-      appId: this.application.appId,
-      title: this.application.title,
-      area: this.application.area,
-      location: this.application.location,
-      institution: this.application.institution,
-      releaser: this.application.releaser,
+      appId: this.application.position._id,
+      title: this.application.position.title,
+      area: this.application.position.area,
+      location: this.application.position.location,
+      institution: this.application.position.faculty.institution,
+      releaser: this.application.position.faculty.name,
       status: this.application.status.toLowerCase(),
-      institutionImg: this.application.institutionImg
+      institutionImg: require("@/assets/USC.png")
     }
   },
   methods: {

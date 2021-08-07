@@ -44,7 +44,7 @@ export default {
   },
   mounted() {
     let positionFinal = '';
-    this.audience.forEach(aud => {
+    this.position.target.forEach(aud => {
       positionFinal += aud + ', ';
     })
     if (positionFinal.length > 0) {
