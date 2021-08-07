@@ -55,7 +55,7 @@
             <vs-th>Student Institution</vs-th>
             <vs-th>Student Skills</vs-th>
             <vs-th>Linkedin</vs-th>
-            <vs-th>Application Status</vs-th>
+            <vs-th>Student Status</vs-th>
             <vs-th>Decision</vs-th>
           </vs-tr>
         </template>

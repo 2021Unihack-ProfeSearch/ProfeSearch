@@ -4,7 +4,8 @@
     <div class="myInput" style="float:left;width:50%">
       <span class="inputLabel">Linkedin Profile (optional)</span><br/>
       <div style="margin: 0.5rem 1rem;">
-        <span>This will allow us to parse some information from your Linkedin Homepage.</span>
+        <span>This will allow us to parse some information from your Linkedin Homepage.</span></br>
+        <span>We will not leak or use any of your privacy.</span>
       </div>
       <span class="sub-inputLabel">Linkedin Username</span><br/>
       <vs-input
