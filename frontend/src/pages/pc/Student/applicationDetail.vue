@@ -11,7 +11,6 @@
         <span class="statusSpan" style="background: #DDDDDD;color: #777777;" v-if="status === 'rejected'">Rejected</span>
         <span class="statusSpan" style="background: #FFDB99;color: #FF8626"  v-else-if="status === 'pending'">Pending</span>
         <span class="statusSpan" style="background: #CFEDB1;color: #30C530;" v-else>Success</span>
-        <vs-button class="acceptBtn" v-if="status === 'accepted'" success flat :active="false">Accept the offer!</vs-button>
       </div>
       <div>
         <div class="infoSpan">

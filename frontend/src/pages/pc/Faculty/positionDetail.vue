@@ -11,7 +11,7 @@
         <span class="statusSpan" style="background: #DDDDDD;color: #777777;" v-if="status === 'closed'">Closed</span>
         <span class="statusSpan" style="background: #FFDB99;color: #FF8626"  v-else-if="status === 'unfulfilled'">Unfulfilled</span>
         <span class="statusSpan" style="background: #CFEDB1;color: #30C530;" v-else>Fulfilled</span>
-        <vs-button class="closeBtn" style="background: #DDDDDD;color: #777777;" v-if="status != 'closed'" flat :active="false">Close this position</vs-button>
+        <vs-button @click="dialogOpen = true" class="closeBtn" danger v-if="status !== 'closed'" flat :active="false">Close this position</vs-button>
       </div>
 
     <div>
@@ -73,8 +73,8 @@
               {{ tr.application_status}}
             </vs-td>
             <vs-td>
-              <vs-button style="display:inline" success border :active="active == 2" @click="active = 2">Accept</vs-button>
-              <vs-button style="display:inline" danger border :active="active == 2" @click="active = 2">Reject</vs-button>
+              <vs-button style="display:inline" success border :active="false">Accept</vs-button>
+              <vs-button style="display:inline" danger border :active="false">Reject</vs-button>
             </vs-td>
           </vs-tr>
         </template>
@@ -84,7 +84,26 @@
       </vs-table>
     </div>
   </div>
-
+    <vs-dialog width="550px" not-center v-model="dialogOpen">
+      <template #header>
+        <h4 class="not-margin">
+          Close Position
+        </h4>
+      </template>
+      <p>
+        Are you sure you want to close this position?
+      </p>
+      <template #footer>
+        <div style="display: flex;justify-content: flex-end;">
+          <vs-button @click="closePosition" transparent>
+            Yes
+          </vs-button>
+          <vs-button @click="dialogOpen=false" dark transparent>
+            Cancel
+          </vs-button>
+        </div>
+      </template>
+    </vs-dialog>
   </div>
 </template>
 
@@ -100,6 +119,12 @@ export default {
       positionFinal = positionFinal.substr(0,positionFinal.length - 2);
     }
     this.audience = positionFinal;
+    document.getElementById("goBackDiv").addEventListener("mouseover", function () {
+      document.getElementById("goBack").setAttribute("fill", "#FF8626");
+    })
+    document.getElementById("goBackDiv").addEventListener("mouseout", function () {
+      document.getElementById("goBack").setAttribute("fill", "#8a8a8a");
+    })
   },
   data () {
     return {
@@ -118,6 +143,7 @@ export default {
       // TODO status: application.status.toLowerCase()
       page: 1,
       max: 3,
+      dialogOpen: false,
       users: [
         {
           student_name: "Lorena",
@@ -203,8 +229,12 @@ export default {
     }
   },
   methods: {
-    goBack(){
+    goBack () {
       window.history.back();
+    },
+    closePosition() {
+      // TODO: close position
+      this.dialogOpen = false;
     }
   }
 }
