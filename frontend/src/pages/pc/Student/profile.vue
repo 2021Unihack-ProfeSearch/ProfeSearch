@@ -18,11 +18,15 @@
             placeholder="profesearch@youremail.com"/>
         </div>
         <div class="myInput">
-          <span class="inputLabel">Institution</span>
-          <vs-input
-            primary
-            v-model="institution"
-            placeholder="University of Southern California"/>
+          <span class="inputLabel">Institution</span><br/>
+          <el-select v-model="institution" placeholder="Select your institution">
+            <el-option
+              v-for="(institution, index) in institutionList"
+              :key="index"
+              :label="institution"
+              :value="index">
+            </el-option>
+          </el-select>
         </div>
         <div class="myInput">
           <span class="inputLabel">Major</span>
@@ -88,6 +92,7 @@
 </template>
 
 <script>
+import institutionList from '@/utils/institutionList.js'
 export default {
   name: "profile",
   data () {
@@ -99,7 +104,8 @@ export default {
       grade: '',
       resume: '',
       saveBtn: 0,
-      uploadActive: 0
+      uploadActive: 0,
+      institutionList: institutionList
     }
   }
 }
@@ -148,5 +154,18 @@ export default {
 /deep/ .vs-select__label {
   font-size: 1rem;
   margin-left: 1rem;
+}
+/deep/ .el-input__inner {
+  width: 35rem;
+  background: rgb(245, 247, 248);
+  border: none;
+  height: 3rem;
+  border-radius: 10px;
+  font-size: 16px;
+  padding-left: 1.75rem;
+  color: black;
+}
+/deep/ .el-select-dropdown__item.selected {
+  color: #FF8626;
 }
 </style>

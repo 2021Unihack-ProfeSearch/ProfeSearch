@@ -12,7 +12,6 @@
         <div class="myInput">
           <span class="inputLabel">Type</span>
           <vs-select placeholder="Type" v-model="type">
-            <vs-option label="All" value='-1'>All</vs-option>
             <vs-option label="Research" value='0'>Research</vs-option>
             <vs-option label="Internship" value='1'>Internship</vs-option>
             <vs-option label="Others" value='2'>Others</vs-option>
