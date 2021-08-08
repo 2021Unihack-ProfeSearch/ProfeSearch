@@ -1,5 +1,5 @@
 <template>
-  <div class="myPosition" ref="position">
+  <div class="myPosition" ref="position" v-if="status !== 'closed'">
     <div>
       <span style="font-size: 1.7rem;font-weight: bold;">{{title}}</span><br/>
     </div>
