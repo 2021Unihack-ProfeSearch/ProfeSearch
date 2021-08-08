@@ -23,14 +23,19 @@
         <span>{{location}}</span>
       </div>
     </div>
-    <vs-button
-      flat
-      :active="false"
-      class="detailBtn"
-      @click="goToDetail"
-    >
-      Full Details
-    </vs-button>
+    <div class="detailBtn">
+      <span class="statusSpan" style="background: #FFDB99;color: #FF8626;" v-if="status === 'unfulfilled'">Unfulfilled</span>
+      <span class="statusSpan" style="background: #CFEDB1;color: #30C530"  v-else-if="status === 'fulfilled'">Fulfilled</span>
+      <span class="statusSpan" style="background: #DDDDDD;color: #777777;" v-else>Closed</span>
+      <vs-button
+        flat
+        :active="false"
+        style="display: inline-block;font-size: 13px;"
+        @click="goToDetail"
+      >
+        Full Details
+      </vs-button>
+    </div>
   </div>
 </template>
 
@@ -63,7 +68,8 @@ export default {
       location: this.position.location,
       institution: this.position.faculty.institution,
       audience: this.position.target,
-      institutionImg: require('@/assets/USC.png')
+      institutionImg: require('@/assets/USC.png'),
+      status: this.position.status
     }
   },
   methods: {
@@ -93,11 +99,18 @@ export default {
   transition: box-shadow .2s cubic-bezier(.645,.045,.355,1);
 }
 .detailBtn {
-  width: 7rem;
+  width: 13rem;
   font-size: 1rem;
   height: 2rem;
   position: absolute;
   right: 1rem;
   top: 1rem;
+  text-align: right;
+}
+.statusSpan {
+  border-radius: 11px;
+  padding: 5px 13px;
+  font-size: 14px;
+  font-weight: 600;
 }
 </style>

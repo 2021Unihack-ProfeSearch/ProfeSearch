@@ -56,9 +56,10 @@
 <!--    </div>-->
 
 <!--展示position-->
-    <div style="margin: 6rem 13rem;">
+    <div style="padding: 2rem 13rem;">
       <my-application-tag v-for="(application, i) in applicationList" :key="i" :application="application"/>
     </div>
+    <span class="noApp" v-if="applicationList.length === 0">Go and make your first application!</span>
 
   </div>
 </template>
@@ -160,5 +161,14 @@ export default {
   position: relative;
   right: 4px;
   top: -1px;
+}
+.noApp {
+  display: block;
+  text-align: center;
+  font-size: 1.3rem;
+  color: #808080cf;
+}
+/deep/ .vs-navbar-content .textWhite .vs-component--is-color {
+  position:absolute;
 }
 </style>

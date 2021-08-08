@@ -41,7 +41,7 @@
         <div class="myInput">
           <span class="inputLabel">Location</span>
           <vs-select placeholder="Location" v-model="location">
-            <vs-option label="In Person" :value='0'>In Person</vs-option>
+            <vs-option label="In Person" :value='-1'>In Person</vs-option>
             <vs-option label="Remote" :value='1'>Remote</vs-option>
           </vs-select>
         </div>
@@ -112,13 +112,19 @@ export default {
   },
   methods: {
     addNewPosition () {
+      let location = '';
+      if (this.location === -2) {
+        location = 0;
+      } else {
+        location = 1;
+      }
       this.$axios.post(api.position.createNewPosition, {
         title: this.title,
         description: this.description,
         positionType: this.type + 1,
         target: this.audience,
         status: 1,
-        location: this.location + 1,
+        location: location + 1,
         area: this.area,
         deadline: this.deadline
       }).then(res => {
@@ -130,7 +136,7 @@ export default {
       }).catch(err => {
         console.log(err)
         closeLoading();
-        this.$message.error("Error creating new position. Please contact admin.");
+        //this.$message.error("Error creating new position. Please contact admin.");
       })
     }
   }

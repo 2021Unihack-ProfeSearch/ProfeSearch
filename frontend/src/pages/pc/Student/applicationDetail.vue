@@ -9,7 +9,7 @@
       <div style="display: flex;align-items: center;margin-top: 6rem;position: relative">
         <span class="title">{{title}}</span>
         <span class="statusSpan" style="background: #DDDDDD;color: #777777;" v-if="status === 'rejected'">Rejected</span>
-        <span class="statusSpan" style="background: #FFDB99;color: #FF8626"  v-else-if="status === 'pending'">Pending</span>
+        <span class="statusSpan" style="background: #FFDB99;color: #FF8626"  v-else-if="status === 'processing'">Pending</span>
         <span class="statusSpan" style="background: #CFEDB1;color: #30C530;" v-else>Success</span>
       </div>
       <div>
@@ -48,6 +48,14 @@ export default {
     })
     this.$axios.get(api.application.studentGetSingleApplication + '/' + this.$route.params.appId).then(res => {
       console.log(res);
+      this.title = res.data.Application.position.title;
+      this.area = res.data.Application.position.area;
+      this.location = res.data.Application.position.location;
+      this.title = res.data.Application.position.title;
+      this.description = res.data.Application.position.description;
+      this.application_status = res.data.Application.status.toLowerCase();
+      this.releaser = res.data.Application.position.faculty.name;
+      //this.status = res.data.Application.status;
     }).catch(err => {
       console.log(err);
       closeLoading();
@@ -66,7 +74,6 @@ export default {
       application_status: "Rejected",
       releaser: "Aaron Cote",
       status: "accepted"
-      // TODO: this.application.status.toLowerCase()
     }
   },
   methods: {

@@ -8,7 +8,7 @@
       <!--    type (0 research, 1 internship, 2 others)-->
       <vs-select placeholder="Type" v-model="type">
         <vs-option label="All" :value='-1'>All</vs-option>
-        <vs-option label="Research" :value='0'>Research</vs-option>
+        <vs-option label="Research" :value='-2'>Research</vs-option>
         <vs-option label="Internship" :value='1'>Internship</vs-option>
         <vs-option label="Others" :value='2'>Others</vs-option>
       </vs-select>
@@ -16,14 +16,14 @@
       <!--    location (0 in-person, 1 remote)-->
       <vs-select placeholder="Location" v-model="location">
         <vs-option label="All" :value='-1'>All</vs-option>
-        <vs-option label="In Person" :value='0'>In Person</vs-option>
+        <vs-option label="In Person" :value='-2'>In Person</vs-option>
         <vs-option label="Remote" :value='1'>Remote</vs-option>
       </vs-select>
 
       <!--   status(0 unfulfilled, 1 fulfilled, 2 closed) -->
       <vs-select placeholder="Status" v-model="position_status">
         <vs-option label="All" :value='-1'>All</vs-option>
-        <vs-option label="Unfulfilled" :value='0'>Unfulfilled</vs-option>
+        <vs-option label="Unfulfilled" :value='-2'>Unfulfilled</vs-option>
         <vs-option label="Fulfilled" :value='1'>Fulfilled</vs-option>
         <vs-option label="Closed" :value='2'>Closed</vs-option>
       </vs-select>
@@ -31,7 +31,7 @@
       <!--    target audience (-1 All, 0 freshman, 1 sophomore, 2 junior, 3 senior, 4 graduate, 5 master, 6 doctor)-->
       <vs-select placeholder="Target Audience" v-model="target_audience">
         <vs-option label="All" :value='-1'>All</vs-option>
-        <vs-option label="Freshman" :value='0'>Freshman</vs-option>
+        <vs-option label="Freshman" :value='-2'>Freshman</vs-option>
         <vs-option label="Sophomore" :value='1'>Sophomore</vs-option>
         <vs-option label="Junior" :value='2'>Junior</vs-option>
         <vs-option label="Senior" :value='3'>Senior</vs-option>
@@ -55,7 +55,7 @@
       <my-position-tag v-for="(position, i) in positionList" :key="i" :position="position"/>
     </div>
 
-    <span class="noSuitable" v-if="positionList.length === 0">There is no matched position.</span>
+    <span class="noSuitable" v-if="positionList.length === 0">{{noMatchText}}</span>
   </div>
 </template>
 
@@ -70,7 +70,10 @@ export default {
     this.$axios.get(api.position.getAllPositions, {
     }).then((res) => {
       this.positionList = res.data.Positions;
-      console.log(res)
+      //console.log(res)
+      if (this.positionList.length === 0) {
+        this.noMatchText = "Go and post a new position!";
+      }
     }).catch(err => {
       closeLoading();
       console.log(err);
@@ -95,22 +98,31 @@ export default {
       //   position_status: 0,
       // }
       ],
-      saveBtn: 0
+      saveBtn: 0,
+      noMatchText: ''
     }
   },
   methods: {
     search () {
       let content = {};
-      if (this.type !== '' && this.type !== -1) {
+      if (this.type === -2) {
+        content.positionType = 1;
+      } else if (this.type !== '' && this.type !== -1) {
         content.positionType = this.type + 1;
       }
-      if (this.location !== '' && this.location !== -1) {
+      if (this.location === -2) {
+        content.positionType = 1;
+      } else if (this.location !== '' && this.location !== -1) {
         content.location = this.location + 1;
       }
-      if (this.position_status !== '' && this.position_status !== -1) {
+      if (this.position_status === -2) {
+        content.status = 1;
+      } else if (this.position_status !== '' && this.position_status !== -1) {
         content.status = this.position_status + 1;
       }
-      if (this.target_audience !== '' && this.target_audience !== -1) {
+      if (this.target_audience === -2) {
+        content.target = 0;
+      } else if (this.target_audience !== '' && this.target_audience !== -1) {
         content.target = this.target_audience;
       }
       console.log(content);
@@ -118,7 +130,10 @@ export default {
         params: content
       }).then((res) => {
         this.positionList = res.data.Positions;
-        console.log(res)
+        if (this.positionList.length === 0) {
+          this.noMatchText = "No matched position";
+        }
+        //console.log(res)
       }).catch(err => {
         closeLoading();
         console.log(err);

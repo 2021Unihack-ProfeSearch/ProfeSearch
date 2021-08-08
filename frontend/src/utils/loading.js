@@ -7,7 +7,8 @@ function startLoading() {
     lock: true,
     text: 'Loading...',
     spinner: 'el-icon-loading',
-    background: 'white'
+    background: 'white',
+    fullscreen: true
   })
 }
 

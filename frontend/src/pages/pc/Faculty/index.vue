@@ -101,6 +101,17 @@ export default {
         this.$message.error("Error. Please contact admin");
       })
     }
+  },
+  watch: {
+    '$route' (val) {
+      if (val.name === 'facultyMyPosition' || val.name === 'facultyPositionDetail') {
+        this.active = 'primary';
+      } else if (val.name === 'facultyAddPosition') {
+        this.active = 'success';
+      } else {
+        this.active = 'danger';
+      }
+    },
   }
 }
 </script>
@@ -135,7 +146,7 @@ export default {
   padding: 0 3rem;
 }
 /deep/ .vs-navbar__item {
-  font-size: 1.1rem;
+  //font-size: 1.1rem;
   margin: 0 0.5rem;
 }
 /deep/ .vs-navbar-content {

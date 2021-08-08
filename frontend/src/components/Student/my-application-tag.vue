@@ -44,7 +44,7 @@ export default {
   },
   data () {
     return {
-      appId: this.application.position._id,
+      appId: this.application._id,
       title: this.application.position.title,
       area: this.application.position.area,
       location: this.application.position.location,
