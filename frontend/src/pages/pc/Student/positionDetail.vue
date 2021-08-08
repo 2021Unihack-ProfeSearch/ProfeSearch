@@ -105,7 +105,7 @@ export default {
       ).then(res => {
         this.$message.success("Successfully applied!");
         setTimeout(() => {
-          location.reload();
+          this.$router.replace("/pc/student/FindPosition");
         })
       }).catch(err => {
         console.log(err);

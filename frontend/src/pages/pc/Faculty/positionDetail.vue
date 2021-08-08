@@ -125,18 +125,20 @@ export default {
     })
     this.$axios.get(api.position.getAllPositions + '/' + this.$route.params.positionId).then(res => {
       console.log(res);
-      this.institution = res.data.position.faculty.institution;
-      this.title = res.data.position.title;
-      this.deadline = parseDate(res.data.position.deadline);
-      this.area = res.data.position.area;
-      this.location = res.data.position.location;
-      this.description = res.data.position.description;
-      this.status = res.data.position.status.toLowerCase();
-      this.type = res.data.position.positionType;
-      this.users = res.data.position.applications
+      this.institution = res.data.Position.faculty.institution;
+      this.title = res.data.Position.title;
+      this.deadline = parseDate(res.data.Position.deadline);
+      this.area = res.data.Position.area;
+      this.location = res.data.Position.location;
+      this.description = res.data.Position.description;
+      this.status = res.data.Position.status.toLowerCase();
+      this.type = res.data.Position.positionType;
+      if (res.data.Position.applications) {
+        this.users = res.data.Position.applications;
+      }
       console.log(this.users);
       let positionFinal = '';
-      res.data.position.target.forEach(aud => {
+      res.data.Position.target.forEach(aud => {
         positionFinal += aud + ', ';
       })
       if (positionFinal.length > 0) {

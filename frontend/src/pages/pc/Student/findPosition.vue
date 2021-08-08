@@ -119,8 +119,7 @@ export default {
       if (this.status !== '' && this.status !== -1) {
         content.status = this.status + 1;
       }
-      console.log(content.status);
-      console.log(typeof content.deadline);
+      console.log(content);
       this.$axios.get(api.position.getAllPositions, {
         params: content
       }).then((res) => {
