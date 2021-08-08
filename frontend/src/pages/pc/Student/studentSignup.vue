@@ -45,19 +45,19 @@
             <vs-option label="Others" :value='11'>Others</vs-option>
           </vs-select>
         </div>
-        <div class="myInput">
-          <span class="inputLabel">My Resume</span><br/>
-          <a style="display: inline-block;margin: 13px 2rem;">XXX.pdf</a>
-          <vs-button
-            transparent
-            :active="uploadActive === 0"
-            @click="uploadActive = 0"
-            class="saveBtn uploadBtn"
-            style="border: 1px solid rgb(252, 232, 217);"
-          >
-            Upload My Resume
-          </vs-button>
-        </div>
+<!--        <div class="myInput">-->
+<!--          <span class="inputLabel">My Resume</span><br/>-->
+<!--          <a style="display: inline-block;margin: 13px 2rem;">XXX.pdf</a>-->
+<!--          <vs-button-->
+<!--            transparent-->
+<!--            :active="uploadActive === 0"-->
+<!--            @click="uploadActive = 0"-->
+<!--            class="saveBtn uploadBtn"-->
+<!--            style="border: 1px solid rgb(252, 232, 217);"-->
+<!--          >-->
+<!--            Upload My Resume-->
+<!--          </vs-button>-->
+<!--        </div>-->
         <div class="myInput">
           <span class="inputLabel">Grade</span><br/>
           <vs-select
